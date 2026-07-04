@@ -1,0 +1,41 @@
+{
+  "name": "@adviverse/react",
+  "version": "1.0.1",
+  "description": "React components for Adviverse ad slots — <AdSlot />, <AdScript />, <AdRefresh />. One import, no dangerouslySetInnerHTML, no currentScript workarounds.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adviverse/react.git"
+  },
+  "homepage": "https://github.com/Adviverse/react#readme",
+  "bugs": {
+    "url": "https://github.com/Adviverse/react/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsup"
+  },
+  "keywords": ["adviverse", "ads", "react", "nextjs", "adslot"],
+  "peerDependencies": {
+    "react": ">=17"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "react": "^18.3.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2"
+  }
+}
