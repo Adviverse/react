@@ -50,6 +50,18 @@ img-src     https://cdn.adviverse.com https://serve.adviverse.com data:
 connect-src https://serve.adviverse.com
 ```
 
+## Versioning
+
+By default the components load the **pinned** `/sdk/v1.js`, so a breaking SDK change can never silently alter your integration — the package major tracks the SDK major (`@adviverse/react@2` → `v2`). Escape hatches:
+
+```tsx
+<AdSlot tag="tk_…" version="v2" />                 // canary a newer line
+<AdSlot tag="tk_…" src="https://serve.adviverse.com/sdk/1.2.3.js" />  // exact pin / self-host
+<AdScript version="" />                            // unversioned latest
+```
+
+`loadSdk()` also accepts `{ endpoint, version, src }` (the string form `loadSdk("https://…")` still works).
+
 ## Debugging
 
 Add `?adviverse_debug=1` to the URL (or set `window.ADVIVERSE_DEBUG = true`) to console-log each request, the resolved size, and any no-fill reason. Use the reserved tag `tk_test` to render a labeled test ad that always fills — verify your integration before a campaign is live.
