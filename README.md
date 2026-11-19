@@ -50,6 +50,23 @@ img-src     https://cdn.adviverse.com https://serve.adviverse.com data:
 connect-src https://serve.adviverse.com
 ```
 
+## `useAdSlot` hook
+
+If you want to own the element, use the hook instead of `<AdSlot>`:
+
+```tsx
+import { useRef } from 'react';
+import { useAdSlot } from '@adviverse/react';
+
+function Banner() {
+  const ref = useRef<HTMLDivElement>(null);
+  useAdSlot(ref, { tag: 'tk_…', sizes: '300x250' });
+  return <div ref={ref} style={{ width: 300, height: 250 }} />;
+}
+```
+
+It renders on mount, re-renders when `tag`/`sizes` change, and destroys on unmount.
+
 ## Versioning
 
 By default the components load the **pinned** `/sdk/v1.js`, so a breaking SDK change can never silently alter your integration — the package major tracks the SDK major (`@adviverse/react@2` → `v2`). Escape hatches:

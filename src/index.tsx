@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties, type HTMLAttributes } from 'react';
+import { useEffect, useRef, type CSSProperties, type HTMLAttributes, type RefObject } from 'react';
 
 /**
  * @adviverse/react — drop-in React components for Adviverse ad slots.
@@ -118,6 +118,42 @@ export function AdSlot({ tag, sizes, endpoint, version, src, ...rest }: AdSlotPr
     };
   }, [tag, sizes, endpoint, version, src]);
   return <div ref={ref} data-tag={tag} data-sizes={sizes} {...rest} />;
+}
+
+export interface UseAdSlotOptions {
+  /** Placement tag key, e.g. "tk_…". */
+  tag: string;
+  /** "300x250", comma list, or "fluid". Omit to size from the element's CSS box. */
+  sizes?: string;
+  endpoint?: string;
+  version?: string;
+}
+
+/** Effect body behind useAdSlot (exported for tests). Returns the cleanup. */
+export function attachAdSlot(el: HTMLElement | null, opts: UseAdSlotOptions): () => void {
+  let dead = false;
+  loadSdk({ endpoint: opts.endpoint, version: opts.version })
+    .then(() => {
+      if (dead || !el) return;
+      window.adviverse?.render?.(el, { tag: opts.tag, sizes: opts.sizes });
+    })
+    .catch(() => {});
+  return () => {
+    dead = true;
+    if (el) window.adviverse?.destroy?.(el);
+  };
+}
+
+/**
+ * Hook form of <AdSlot> for when you own the element:
+ *   const ref = useRef(null); useAdSlot(ref, { tag: 'tk_…', sizes: '300x250' });
+ */
+export function useAdSlot(ref: RefObject<HTMLElement | null>, opts: UseAdSlotOptions): void {
+  const { tag, sizes, endpoint, version } = opts;
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    return attachAdSlot(ref.current, { tag, sizes, endpoint, version });
+  }, [ref, tag, sizes, endpoint, version]);
 }
 
 /**
